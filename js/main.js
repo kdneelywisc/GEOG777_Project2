@@ -1,73 +1,61 @@
 require([
-  "esri/Map",
-  "esri/layers/FeatureLayer",
-  "esri/views/MapView",
-  "esri/PopupTemplate",
-  "esri/widgets/Expand",
-  "esri/widgets/Search"
-], function (Map, FeatureLayer, MapView, PopupTemplate, Expand, Search) {
+    "esri/WebMap",
+    "esri/layers/FeatureLayer",
+    "esri/views/MapView",
+    "esri/widgets/Editor",
+    "esri/widgets/Expand",
+    "esri/widgets/Search",
+    "esri/widgets/LayerList"
+  ], (WebMap, FeatureLayer, MapView, Editor, Expand, Search, LayerList) => {
+    let pointLayer, floodLayerView;
 
-  let floodLayerView;
-  /******************************************************************
-   *
-   * Popup example
-   *
-   ******************************************************************/
-
-  // Step 1: Create the template
-  const popupTemplate = new PopupTemplate({
-    title: "Trailheads: {name}",
-    content: [{
-        // Specify the type of popup element - fields
-        //fieldInfos autocasts
-        type: "fields",
-        fieldInfos: [{
-            fieldName: "type",
-            visible: true,
-            label: "Type: "
-          },
-          {
-            fieldName: "bathrooms",
-            visible: true,
-            label: "Bathroom Available: "
-          },
-                  {
-            fieldName: "water",
-            visible: true,
-            label: "Drinking Water Available: "
-          },
-                  {
-            fieldName: "WINTER_STA",
-            visible: true,
-            label: "Winter Status: "
-          },
-        ]
-      }]
-  });    
-  /******************************************************************
-   *
-   * Add featurelayers to the map example
-   *
-   ******************************************************************/
-
-  // Create the layers
-  const parkBoundary = new FeatureLayer({
-    url: "https://services3.arcgis.com/VNV3Cd3le8zQX8yy/arcgis/rest/services/State_Forest_Park_Boundary/FeatureServer"
+      const scenicView = new FeatureLayer({
+    portalItem: {
+        id: "e4a4389b75de4d9896bc321337e6a897"
+    },
+      outFields: ["*"]
+  });
+  const trailHeads = new FeatureLayer({
+    portalItem: {
+        id: "2fcb62dc9ad24e67bd05c35166731533"
+    },
+      outFields: ["*"]
   });
     
+    // Create a map from the referenced webmap item id
+    const webmap = new WebMap({
+      portalItem: {
+        id: "34362ae16a4f430ba53268f7aa81d4f5"
+      },
+        layers: [trailHeads, scenicView]
+    });
+
+    const view = new MapView({
+      container: "viewDiv",
+      map: webmap
+    });
+  // Create the layers
+  const parkBoundary = new FeatureLayer({
+    portalItem: {
+        id: "c5b33d86fc1741b4936b7e64d204c29b"
+    }
+  });
   const visitorCenter = new FeatureLayer({
     url: "https://services3.arcgis.com/VNV3Cd3le8zQX8yy/arcgis/rest/services/Visitor_center/FeatureServer"
   });
     
-  const ScenicView = new FeatureLayer({
-    url: "https://services3.arcgis.com/VNV3Cd3le8zQX8yy/arcgis/rest/services/Scenic_Overlook/FeatureServer"
+/*  const scenicView = new FeatureLayer({
+    portalItem: {
+        id: "e4a4389b75de4d9896bc321337e6a897"
+    },
+      outFields: ["*"]
   });
-    
-   const trailHeads = new FeatureLayer({
-    url: "https://services3.arcgis.com/VNV3Cd3le8zQX8yy/arcgis/rest/services/Trailheads/FeatureServer",
-    popupTemplate: popupTemplate,
-    outFields: ["*"]
-   });
+  const trailHeads = new FeatureLayer({
+    portalItem: {
+        id: "2fcb62dc9ad24e67bd05c35166731533"
+    },
+      outFields: ["*"]
+  });*/
     
   const parkingLots = new FeatureLayer({
     url: "https://services3.arcgis.com/VNV3Cd3le8zQX8yy/arcgis/rest/services/Parking/FeatureServer"
@@ -83,38 +71,7 @@ require([
 
   const trails = new FeatureLayer({
     url: "https://services3.arcgis.com/VNV3Cd3le8zQX8yy/arcgis/rest/services/Trails/FeatureServer"
-  });     
-    
-  // 2 - This additional point layer shows time aware data used for the
-  //     TimeSlider
-  // var vehicleThefts = new FeatureLayer({
-  //   url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/ChicagoCrime/FeatureServer/0"
-  // });
-
-  // Set map's basemap
-  const map = new Map({
-    basemap: "topo-vector"
-  });
-
-  const view = new MapView({
-    container: "viewDiv",
-    map: map,
-    zoom: 10,
-    center: [-106.010278, 40.511400],
-    popup: {
-      dockEnabled: true,
-      dockOptions: {
-        buttonEnabled: false,
-        breakpoint: false
-      }
-    }
-  });
-
-  view.when(function() {
-    // Add the layer
-    //map.add(parkBoundary);
-    map.addMany([parkBoundary, visitorCenter, ScenicView, trailHeads, parkingLots, drinkingWater, restrooms, trails]);
-  
+  }); 
 /******************************************************************
  *
  * Demo 5: Filter data to display
@@ -162,6 +119,52 @@ require([
       // Add the widget
       view.ui.add(seasonsExpand, "top-left");
     });
+    /******************************************************************
+ *
+ * Demo 5: Add/Edit Data
+ *
+ ******************************************************************/
+    
+    view.when(() => {
+      view.map.loadAll().then(() => {
+
+
+        // Create layerInfos for layers in Editor. This
+        // sets the fields for editing.
+
+        const pointInfos = {
+          layer: pointLayer,
+          fieldConfig: [
+            {
+              name: "Conditions",
+              label: "Environmental Conditions"
+            },
+            {
+              name: "Description",
+              label: "Moose Description"
+            }
+          ]
+        };
+
+
+        const editor = new Editor({
+          view: view,
+          layerInfos: [
+            {
+              layer: pointLayer,
+              fieldConfig: [pointInfos]
+            }
+          ],
+            });
+
+
+        // Add the widgets to top and bottom right of the view
+        view.ui.add(editor, "top-right");
+      });
+    });
+    
+      view.when(function() {
+
   /******************************************************************
  *
  * Demo 00. Set up Search Bar
@@ -182,7 +185,7 @@ require([
               placeholder: "example: Lake Agnes"
             },
             {
-              layer: ScenicView,
+              layer: scenicView,
               searchFields: ["FAC_NAME"],
               displayField: "FAC_NAME",
               exactMatch: false,
@@ -222,4 +225,29 @@ require([
           position: "top-right"
         }); 
   });
+  /******************************************************************
+ *
+ * Demo 00. Set up Layer List
+ *
+ ******************************************************************/     
+        const layerlist = new LayerList({
+          view: view,
+          container: document.createElement("div")
+        });
+
+        // Create an Expand instance and set the content
+        // property to the DOM node of the basemap gallery widget
+        // Use an Esri icon font to represent the content inside
+        // of the Expand widget
+
+        const lyrExpand = new Expand({
+          view: view,
+          content: layerlist
+        });
+
+        // Add the expand instance to the ui
+
+        view.ui.add(lyrExpand, "top-left");
+          
 });
+

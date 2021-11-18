@@ -149,6 +149,7 @@ require([
 
         const editor = new Editor({
           view: view,
+          //container: document.createElement("div")
           layerInfos: [
             {
               layer: pointLayer,
@@ -156,10 +157,14 @@ require([
             }
           ],
             });
+        const editorExpand = new Expand({
+            view: view,
+            content: editor
+        });
 
 
         // Add the widgets to top and bottom right of the view
-        view.ui.add(editor, "top-right");
+        view.ui.add(editorExpand, "top-left");
       });
     });
     
@@ -194,29 +199,7 @@ require([
               placeholder: "example: Kelly Lakes",
               zoomScale: 50000
             }              
-/*            {
-              layer: ScenicView,
-              searchFields: ["FAC_NAME", "CONDITION"],
-              suggestionTemplate: "{Name}, Party: {Party}",
-              exactMatch: false,
-              outFields: ["*"],
-              placeholder: "example: Kelly Lake Overlook",
-              name: "Scenic Overlook",
-              zoomScale: 500000,
-              resultSymbol: {
-                type: "picture-marker", // autocasts as new PictureMarkerSymbol()
-                url: "https://developers.arcgis.com/javascript/latest//sample-code/widgets-search-multiplesource/live/images/senate.png",
-                height: 36,
-                width: 36
-              }
-            },
-            {
-              name: "ArcGIS World Geocoding Service",
-              placeholder: "example: Nuuk, GRL",
-              apiKey: "YOUR_API_KEY",
-              singleLineFieldName: "SingleLine",
-              locator: "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer"
-            }*/
+
           ]
         });
       
@@ -235,10 +218,6 @@ require([
           container: document.createElement("div")
         });
 
-        // Create an Expand instance and set the content
-        // property to the DOM node of the basemap gallery widget
-        // Use an Esri icon font to represent the content inside
-        // of the Expand widget
 
         const lyrExpand = new Expand({
           view: view,

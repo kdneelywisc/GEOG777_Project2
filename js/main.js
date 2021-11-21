@@ -1,15 +1,17 @@
 require([
+    "esri/config",
     "esri/WebMap",
     "esri/layers/FeatureLayer",
     "esri/views/MapView",
     "esri/widgets/Editor",
     "esri/widgets/Expand",
     "esri/widgets/Search",
+    "esri/widgets/Locate",
     "esri/widgets/LayerList"
-  ], (WebMap, FeatureLayer, MapView, Editor, Expand, Search, LayerList) => {
+  ], (esriConfig, WebMap, FeatureLayer, MapView, Editor, Expand, Search, Locate, LayerList) => {
     let pointLayer, floodLayerView;
-
-      const scenicView = new FeatureLayer({
+    
+          const scenicView = new FeatureLayer({
     portalItem: {
         id: "e4a4389b75de4d9896bc321337e6a897"
     },
@@ -23,6 +25,8 @@ require([
   });
     
     // Create a map from the referenced webmap item id
+    
+    esriConfig.apiKey = "AAPKd37cc5041a3f412ebf0bbc7d12868dd454BSzekDr2S3psvWDf5mwUPisZlcuEg0ZiHzG9YmEUpc-AlV9o4ITuwNNpiLyI2g";
     const webmap = new WebMap({
       portalItem: {
         id: "34362ae16a4f430ba53268f7aa81d4f5"
@@ -227,6 +231,21 @@ require([
         // Add the expand instance to the ui
 
         view.ui.add(lyrExpand, "top-left");
+  /******************************************************************
+ *
+ * Demo 00. Set up Location
+ *
+ ******************************************************************/    
+    
+            const locate = new Locate({
+          view: view,
+          useHeadingEnabled: false,
+          goToOverride: function(view, options) {
+            options.target.scale = 1500;
+            return view.goTo(options.target);
+          }
+        });
+        view.ui.add(locate, "top-left");
           
 });
 

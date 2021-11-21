@@ -245,7 +245,7 @@ require([
             return view.goTo(options.target);
           }
         });
-        view.ui.add(locate, "bottom-right");
+        view.ui.add(locate, "bottom-left");
           
 });
 

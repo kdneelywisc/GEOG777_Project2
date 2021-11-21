@@ -1,7 +1,7 @@
 html,
 body,
 #viewDiv {
-    padding: 0;
+    padding: 10;
     margin: 0;
     height: 100%;
     width: 100%;
@@ -43,8 +43,8 @@ body {
 }
 
 .navbar {
-    position: sticky;
-    position: -webkit-sticky;
+/*    position: sticky;
+    position: -webkit-sticky;*/
     top: 0;
     z-index: 5000;
 }

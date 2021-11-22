@@ -24,6 +24,13 @@ require([
       outFields: ["*"]
   });
     
+  const trails = new FeatureLayer({
+    portalItem: {
+        id: "36578d273c7d41d3b67d88452a7e0246"
+    },
+      outFields: ["*"]
+  });    
+    
     // Create a map from the referenced webmap item id
     
     esriConfig.apiKey = "AAPKd37cc5041a3f412ebf0bbc7d12868dd454BSzekDr2S3psvWDf5mwUPisZlcuEg0ZiHzG9YmEUpc-AlV9o4ITuwNNpiLyI2g";
@@ -72,10 +79,7 @@ require([
   const restrooms = new FeatureLayer({
     url: "https://services3.arcgis.com/VNV3Cd3le8zQX8yy/arcgis/rest/services/Restrooms/FeatureServer"
   });    
-
-  const trails = new FeatureLayer({
-    url: "https://services3.arcgis.com/VNV3Cd3le8zQX8yy/arcgis/rest/services/Trails/FeatureServer"
-  }); 
+ 
 /******************************************************************
  *
  * Demo 5: Filter data to display
@@ -190,9 +194,18 @@ require([
               displayField: "name",
               exactMatch: false,
               outFields: ["name", "bathrooms", "water"],
-              name: "Trails",
+              name: "Trailsheads",
               placeholder: "example: Lake Agnes"
             },
+            {
+              layer: trails,
+              searchFields: ["Name"],
+              displayField: "Name",
+              exactMatch: false,
+              outFields: ["Name", "HANDI_ACC", "ELEV_GAIN", "LENGTH_MI"],
+              name: "Trails",
+              placeholder: "example: Lake Agnes"
+            },  
             {
               layer: scenicView,
               searchFields: ["FAC_NAME"],

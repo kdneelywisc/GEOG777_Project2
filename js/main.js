@@ -194,7 +194,7 @@ require([
               displayField: "name",
               exactMatch: false,
               outFields: ["name", "bathrooms", "water"],
-              name: "Trailsheads",
+              name: "Trailheads",
               placeholder: "example: Lake Agnes"
             },
             {

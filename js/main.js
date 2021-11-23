@@ -15,12 +15,14 @@ require([
     portalItem: {
         id: "e4a4389b75de4d9896bc321337e6a897"
     },
+    displayField: "FAC_NAME",          
       outFields: ["*"]
   });
   const trailHeads = new FeatureLayer({
     portalItem: {
         id: "2fcb62dc9ad24e67bd05c35166731533"
     },
+      displayField: "name",
       outFields: ["*"]
   });
     
@@ -28,6 +30,7 @@ require([
     portalItem: {
         id: "36578d273c7d41d3b67d88452a7e0246"
     },
+      displayField: "name",
       outFields: ["*"]
   });    
     
@@ -67,11 +70,18 @@ require([
     },
       outFields: ["*"]
   });*/
-    
+
   const parkingLots = new FeatureLayer({
+    portalItem: {
+        id: "3ab2296d232f4a1a9aaff33093f06219"
+    },
+      displayField: "FACILITY_NAME",
+      outFields: ["*"]
+  });    
+/*  const parkingLots = new FeatureLayer({
     url: "https://services3.arcgis.com/VNV3Cd3le8zQX8yy/arcgis/rest/services/Parking/FeatureServer"
   });
-    
+    */
   const drinkingWater = new FeatureLayer({
     url: "https://services3.arcgis.com/VNV3Cd3le8zQX8yy/arcgis/rest/services/Drinking_water/FeatureServer"
   });   
@@ -141,17 +151,17 @@ require([
         // sets the fields for editing.
 
         const pointInfos = {
-          layer: pointLayer,
-          fieldConfig: [
+          layer: pointLayer
+/*          fieldConfig: [
             {
               name: "Conditions",
-              label: "Environmental Conditions"
+              label: "Conditions"
             },
             {
               name: "Description",
               label: "Moose Description"
             }
-          ]
+          ]*/
         };
 
 
@@ -199,8 +209,8 @@ require([
             },
             {
               layer: trails,
-              searchFields: ["Name"],
-              displayField: "Name",
+              searchFields: ["name"],
+              displayField: "name",
               exactMatch: false,
               outFields: ["Name", "HANDI_ACC", "ELEV_GAIN", "LENGTH_MI"],
               name: "Trails",
